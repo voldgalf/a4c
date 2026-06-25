@@ -73,17 +73,19 @@ public:
 };
 
 int main() {
-    json properties;
-    properties["variable_name"] = "question_prompt";
-    properties["variable_value"] = "Hello, who are you?";
+    const json variable_properties = {
+        {"variable_name", "prompt"},
+        {"variable_value", "Hello, who are you?"},
+    };
 
-    json llm_properties;
-    llm_properties["model_name"] = "google/gemma-3-1b";
-    llm_properties["question_prompt"] = "{{ variable.question_prompt }}";
+    const json ai_properties = {
+        {"model_name", "google/gemma-3-1b"},
+        {"prompt", "{{ variable.prompt }}"},
+    };
 
-    VariableNode variable_node(properties);
+    VariableNode variable_node(variable_properties);
+    AINode ai_node(ai_properties);
 
-    AINode ai_node(llm_properties);
     json dict = {};
 
     std::cout << "Running Variable Node\n";
