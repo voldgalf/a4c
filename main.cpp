@@ -66,28 +66,29 @@ public:
 };
 
 int main() {
-    VariableNode variable_node;
-
-    AINode ai_node;
     json properties;
     properties["variable_name"] = "question_prompt";
     properties["variable_value"] = "Hello, who are you?";
-
-    json dict = {};
-
-    std::cout << "Running Variable Node\n";
-
-    variable_node.run(dict, properties);
-
-    std::cout << dict.dump(4) << "\n";
-
-    std::cout << "Running AI Node\n";
 
     json llm_properties;
     properties["model_name"] = "google/gemma-3-1b";
     properties["question_prompt"] = "{{ variable.question_prompt }}";
 
-    ai_node.run(dict, llm_properties);
+    VariableNode variable_node(properties);
+
+    AINode ai_node(llm_properties);
+    json dict = {};
+
+    std::cout << "Running Variable Node\n";
+
+    variable_node.run(dict);
+
+    std::cout << dict.dump(4) << "\n";
+
+    std::cout << "Running AI Node\n";
+
+
+    ai_node.run(dict);
 
     std::cout << dict.dump(4) << "\n";
 }
