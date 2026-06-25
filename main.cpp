@@ -30,17 +30,19 @@ public:
 };
 
 class AINode : public Node {
+protected:
+    std::string properties_model;
+    std::string properties_question_template;
+
 public:
-    void run(json &dict, const json &properties) override {
+    explicit AINode(const json &properties) {
+        properties_model = properties.value("/model_name"_json_pointer, json(nullptr));
+        properties_question_template = properties.value(
+            "/question_prompt"_json_pointer, json(nullptr));
+    }
+
+    void run(json &dict) override {
         try {
-            const std::string properties_model = properties.value("/model_name"_json_pointer, json(nullptr));
-            const std::string properties_question_template = properties.value(
-                "/question_prompt"_json_pointer, json(nullptr));
-
-            if (properties_model.empty() || properties_question_template.empty()) {
-                throw 1;
-            }
-
             json llm_request_body;
             llm_request_body["model"] = properties_model;
             llm_request_body["input"] = inja::render(properties_question_template, dict);
