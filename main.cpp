@@ -21,11 +21,15 @@ public:
     }
 
     void run(json &dict) override {
-        if (variable_name.empty() || variable_value.empty()) {
-            throw 1;
-        }
+        try {
+            if (variable_name.empty() || variable_value.empty()) {
+                throw "Missing model parameter or question template";
+            }
 
-        dict["variable"][variable_name] = variable_value;
+            dict["variable"][variable_name] = variable_value;
+        } catch (std::exception &e) {
+            std::cerr << e.what() << "\n";
+        }
     }
 };
 
