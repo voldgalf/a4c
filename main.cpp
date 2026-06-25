@@ -16,8 +16,8 @@ protected:
 
 public:
     explicit VariableNode(const json &properties) {
-        variable_name = properties.value("/variable_name"_json_pointer, json(nullptr));
-        variable_value = properties.value("/variable_value"_json_pointer, json(nullptr));
+        variable_name = properties.value("/variable_name"_json_pointer, "");
+        variable_value = properties.value("/variable_value"_json_pointer, "");
     }
 
     void run(json &dict) override {
@@ -36,23 +36,23 @@ public:
 class AINode : public Node {
 protected:
     std::string model;
-    std::string question_template;
+    std::string prompt;
 
 public:
     explicit AINode(const json &properties) {
-        model = properties.value("/model_name"_json_pointer, json(nullptr));
-        question_template = properties.value("/question_prompt"_json_pointer, json(nullptr));
+        model = properties.value("/model_name"_json_pointer, "");
+        prompt = properties.value("/prompt"_json_pointer, "");
     }
 
     void run(json &dict) override {
         try {
-            if (model.empty() || question_template.empty()) {
-                throw "Missing model parameter or question template";
+            if (model.empty() || prompt.empty()) {
+                throw std::runtime_error("Missing model name or prompt");
             }
 
             json llm_request_body;
             llm_request_body["model"] = model;
-            llm_request_body["input"] = inja::render(question_template, dict);
+            llm_request_body["input"] = inja::render(prompt, dict);
 
             http::Request llm_request{"http://10.0.0.212:1234/v1/responses"};
             http::Response llm_response = llm_request.send("POST", llm_request_body.dump(),
@@ -60,7 +60,7 @@ public:
 
             json llm_response_body = json::parse(std::string{llm_response.body.begin(), llm_response.body.end()});
             std::string llm_response_output = llm_response_body.value("/output/0/content/0/text"_json_pointer,
-                                                                      json(nullptr));
+                                                                      "");
             if (llm_response_output.empty()) {
                 throw 1;
             }
