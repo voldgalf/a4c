@@ -40,9 +40,6 @@ protected:
 
 public:
     explicit AINode(const json &properties) {
-        properties_model = properties.value("/model_name"_json_pointer, json(nullptr));
-        properties_question_template = properties.value(
-            "/question_prompt"_json_pointer, json(nullptr));
         model = properties.value("/model_name"_json_pointer, json(nullptr));
         question_template = properties.value("/question_prompt"_json_pointer, json(nullptr));
     }
@@ -81,8 +78,8 @@ int main() {
     properties["variable_value"] = "Hello, who are you?";
 
     json llm_properties;
-    properties["model_name"] = "google/gemma-3-1b";
-    properties["question_prompt"] = "{{ variable.question_prompt }}";
+    llm_properties["model_name"] = "google/gemma-3-1b";
+    llm_properties["question_prompt"] = "{{ variable.question_prompt }}";
 
     VariableNode variable_node(properties);
 
