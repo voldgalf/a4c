@@ -4,20 +4,24 @@
 
 using namespace inja;
 
-void variable_node(json &dict, const json &properties) {
-    const std::string variable_name = properties.value("/variable_name"_json_pointer, json(nullptr));
-    const std::string variable_value = properties.value("/variable_value"_json_pointer, json(nullptr));
 class Node {
 public:
     virtual void run(json &dict, const json &properties) = 0;
 };
 
-    if (variable_name.empty() || variable_value.empty()) {
-        throw 1;
-    }
+class VariableNode : public Node {
+public:
+    void run(json &dict, const json &properties) override {
+        const std::string variable_name = properties.value("/variable_name"_json_pointer, json(nullptr));
+        const std::string variable_value = properties.value("/variable_value"_json_pointer, json(nullptr));
 
-    dict["variable"][variable_name] = variable_value;
-}
+        if (variable_name.empty() || variable_value.empty()) {
+            throw 1;
+        }
+
+        dict["variable"][variable_name] = variable_value;
+    }
+};
 
 void ai_node(json &dict, const json &properties) {
     try {
