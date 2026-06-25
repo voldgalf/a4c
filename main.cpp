@@ -23,7 +23,7 @@ public:
     void run(json &dict) override {
         try {
             if (variable_name.empty() || variable_value.empty()) {
-                throw "Missing model parameter or question template";
+                throw std::runtime_error("Missing variable name or value");
             }
 
             dict["variable"][variable_name] = variable_value;
@@ -62,7 +62,7 @@ public:
             std::string llm_response_output = llm_response_body.value("/output/0/content/0/text"_json_pointer,
                                                                       "");
             if (llm_response_output.empty()) {
-                throw 1;
+                throw std::runtime_error("Invalid LLM Response");
             }
 
             dict["ai_node"]["response"] = llm_response_output;
