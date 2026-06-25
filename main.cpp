@@ -10,11 +10,17 @@ public:
 };
 
 class VariableNode : public Node {
-public:
-    void run(json &dict, const json &properties) override {
-        const std::string variable_name = properties.value("/variable_name"_json_pointer, json(nullptr));
-        const std::string variable_value = properties.value("/variable_value"_json_pointer, json(nullptr));
+protected:
+    std::string variable_name;
+    std::string variable_value;
 
+public:
+    explicit VariableNode(const json &properties) {
+        variable_name = properties.value("/variable_name"_json_pointer, json(nullptr));
+        variable_value = properties.value("/variable_value"_json_pointer, json(nullptr));
+    }
+
+    void run(json &dict) override {
         if (variable_name.empty() || variable_value.empty()) {
             throw 1;
         }
