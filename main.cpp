@@ -6,7 +6,7 @@ using namespace inja;
 
 class Node {
 public:
-    virtual void run(json &dict, const json &properties) = 0;
+    virtual void run(json &dict) = 0;
 };
 
 class VariableNode : public Node {
