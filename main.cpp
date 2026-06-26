@@ -1,5 +1,6 @@
 #include <iostream>
-#include <nodes.hpp>
+#include <AINode.h>
+#include <VariableNode.h>
 
 int main() {
     VariableNode variable_node({

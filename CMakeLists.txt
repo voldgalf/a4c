@@ -3,7 +3,11 @@ project(a4c)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(a4c main.cpp)
+file(GLOB SOURCES CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+)
+
+add_executable(a4c main.cpp ${SOURCES})
 
 target_include_directories(a4c PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
