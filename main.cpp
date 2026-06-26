@@ -6,7 +6,7 @@ using namespace inja;
 
 class Node {
 public:
-    virtual void run(json &dict) = 0;
+    virtual void run(json &state) = 0;
 };
 
 class VariableNode : public Node {
@@ -20,13 +20,13 @@ public:
         variable_value = properties.value("/variable_value"_json_pointer, "");
     }
 
-    void run(json &dict) override {
+    void run(json &state) override {
         try {
             if (variable_name.empty() || variable_value.empty()) {
                 throw std::runtime_error("Missing variable name or value");
             }
 
-            dict["variable"][variable_name] = variable_value;
+            state["variable"][variable_name] = variable_value;
         } catch (std::exception &e) {
             std::cerr << e.what() << "\n";
         }
@@ -44,7 +44,7 @@ public:
         prompt = properties.value("/prompt"_json_pointer, "");
     }
 
-    void run(json &dict) override {
+    void run(json &state) override {
         try {
             if (model.empty() || prompt.empty()) {
                 throw std::runtime_error("Missing model name or prompt");
@@ -52,7 +52,7 @@ public:
 
             json llm_request_body;
             llm_request_body["model"] = model;
-            llm_request_body["input"] = inja::render(prompt, dict);
+            llm_request_body["input"] = inja::render(prompt, state);
 
             http::Request llm_request{"http://10.0.0.212:1234/v1/responses"};
             http::Response llm_response = llm_request.send("POST", llm_request_body.dump(),
@@ -65,7 +65,7 @@ public:
                 throw std::runtime_error("Invalid LLM Response");
             }
 
-            dict["ai_node"]["response"] = llm_response_output;
+            state["ai_node"]["response"] = llm_response_output;
         } catch (std::exception &e) {
             std::cerr << e.what() << "\n";
         }
@@ -83,21 +83,18 @@ int main() {
         {"prompt", "{{ variable.prompt }}"},
     };
 
-    VariableNode variable_node(variable_properties);
-    AINode ai_node(ai_properties);
-
-    json dict = {};
+    json state = {};
 
     std::cout << "Running Variable Node\n";
 
-    variable_node.run(dict);
+    variable_node.run(state);
 
-    std::cout << dict.dump(4) << "\n";
+    std::cout << state.dump(4) << "\n";
 
     std::cout << "Running AI Node\n";
 
 
-    ai_node.run(dict);
+    ai_node.run(state);
 
-    std::cout << dict.dump(4) << "\n";
+    std::cout << state.dump(4) << "\n";
 }
