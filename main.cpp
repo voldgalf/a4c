@@ -73,15 +73,15 @@ public:
 };
 
 int main() {
-    const json variable_properties = {
+    VariableNode variable_node({
         {"variable_name", "prompt"},
         {"variable_value", "Hello, who are you?"},
-    };
+    });
 
-    const json ai_properties = {
+    AINode ai_node({
         {"model_name", "google/gemma-3-1b"},
         {"prompt", "{{ variable.prompt }}"},
-    };
+    });
 
     json state = {};
 
