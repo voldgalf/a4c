@@ -6,7 +6,7 @@
 
 ParseJSONNode::ParseJSONNode(const inja::json &properties) {
     variable_template = properties.value("/input_template"_json_pointer, "");
-    output_variable = properties.value("/output_template"_json_pointer, "");
+    output_variable = properties.value("/output_variable"_json_pointer, "");
 }
 
 void ParseJSONNode::run(inja::json &state) {
