@@ -2,6 +2,7 @@
 // Created by brick on 6/25/2026.
 //
 #include <../include/HTTPRequest.hpp>
+#include <chrono>
 #include <../include/AINode.h>
 
 AINode::AINode(const inja::json &properties) {
@@ -21,7 +22,8 @@ void AINode::run(inja::json &state) {
 
         http::Request llm_request{"http://10.0.0.212:1234/v1/responses"};
         http::Response llm_response = llm_request.send("POST", llm_request_body.dump(),
-                                                       {{"Content-Type", "application/json"}});
+                                                       {{"Content-Type", "application/json"}},
+                                                       std::chrono::milliseconds(7000));
 
         inja::json llm_response_body = inja::json::parse(
             std::string{llm_response.body.begin(), llm_response.body.end()});
