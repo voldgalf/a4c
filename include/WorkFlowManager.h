@@ -10,7 +10,7 @@ class WorkflowManager {
 protected:
     std::vector<std::unique_ptr<Node> > nodes;
     int current_node = 0;
-    inja::json state = {};
+    nlohmann::json state = {};
 
 public:
     WorkflowManager();

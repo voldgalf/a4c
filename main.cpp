@@ -12,9 +12,9 @@ protected:
 public:
     Node_HelloWorld() = default;
 
-    explicit Node_HelloWorld(const inja::json &properties);
+    explicit Node_HelloWorld(const nlohmann::json &properties);
 
-    void run(inja::json &state) override {
+    void run(nlohmann::json &state) override {
         is_executed = true;
 
 
@@ -23,13 +23,13 @@ public:
 };
 
 /*
-void AINode::run(inja::json &state) {
+void AINode::run(nlohmann::json &state) {
     try {
         if (model.empty() || prompt.empty()) {
             throw std::runtime_error("Missing model name or prompt");
         }
 
-        inja::json llm_request_body;
+        nlohmann::json llm_request_body;
         llm_request_body["model"] = model;
         llm_request_body["input"] = inja::render(prompt, state);
 
@@ -38,7 +38,7 @@ void AINode::run(inja::json &state) {
                                                        {{"Content-Type", "application/json"}},
                                                        std::chrono::milliseconds(7000));
 
-        inja::json llm_response_body = inja::json::parse(
+        nlohmann::json llm_response_body = nlohmann::json::parse(
             std::string{llm_response.body.begin(), llm_response.body.end()});
         std::string llm_response_output = llm_response_body.value("/output/0/content/0/text"_json_pointer,
                                                                   "");
@@ -54,18 +54,6 @@ void AINode::run(inja::json &state) {
 */
 
 int main() {
-    /*
-    VariableNode variable_node({
-        {"variable_name", "prompt"},
-        {"variable_value", "Hello, who are you?"},
-    });
-
-    AINode ai_node({
-        {"model_name", "google/gemma-3-1b"},
-        {"prompt", "{{ variable.prompt }}"},
-    });
-    */
-
     WorkflowManager manager = WorkflowManager();
 
     std::unique_ptr<Node> hello_world = std::make_unique<Node_HelloWorld>();
