@@ -3,7 +3,6 @@
 #include <WorkFlowManager.h>
 #include <Node.h>
 
-
 class Node_HelloWorld : public Node {
 protected:
     std::string variable_template;
