@@ -1,4 +1,4 @@
-# a4c - Workflow Automation For C++
+# a4c - Automation For C++
 
 A code-first workflow library built in C++
 
