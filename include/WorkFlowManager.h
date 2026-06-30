@@ -20,4 +20,6 @@ public:
     void run_next();
 
     void run_all();
+
+    nlohmann::json get_state();
 };

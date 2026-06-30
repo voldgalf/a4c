@@ -29,3 +29,8 @@ void WorkflowManager::run_all() {
         node->run(state);
     }
 }
+
+nlohmann::json WorkflowManager::get_state() {
+    return state;
+}
+
